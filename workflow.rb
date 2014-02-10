@@ -15,10 +15,10 @@ module PdbTools
   Rbbt.claim Rbbt.software.opt["pdb-tools"], :install, Rbbt.share.install.software["pdb-tools"].find
 
   input :pdb, :string, "PDB name or URL"
-  input :pdb_file, :text, "PDB file"
+  input :pdbfile, :text, "PDB file"
   input :distance, :float, "Distance"
-  task :pdb_close_contacts => :text do |pdb, pdb_file, distance|
-    pdb_txt = PdbTools.pdb_stream(pdb, pdb_file)
+  task :pdb_close_contacts => :text do |pdb, pdbfile, distance|
+    pdb_txt = PdbTools.pdb_stream(pdb, pdbfile)
     TmpFile.with_file(pdb_txt, nil, :extension => 'pdb') do |pdbfile|
       CMD.cmd("python '#{Rbbt.software.opt["pdb-tools"].produce["pdb_close-contacts.py"].find}' --distance=#{distance} '#{pdbfile}'").read
       Open.read(pdbfile + '.close_contacts')
