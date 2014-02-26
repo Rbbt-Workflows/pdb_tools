@@ -3,11 +3,10 @@ require 'rbbt/workflow'
 
 module PdbTools
   extend Workflow
-
   def self.pdb_stream(pdb = nil, pdbfile = nil)
     return pdbfile if (pdb.nil? or pdb.empty?) and not pdbfile.nil? and not pdbfile.empty?
-    return Open.read(pdb) if pdb and Open.remote? pdb
-    return Open.read("http://www.pdb.org/pdb/files/#{ pdb }.pdb.gz") unless pdb.nil?
+    return Open.read(pdb) if pdb and Open.remote?(pdb) or Open.exists?(pdb)
+    return Open.read("http://www.rcsb.org/pdb/download/downloadFile.do?fileFormat=pdb&compression=NO&structureId=#{pdb}") unless pdb.nil?
 
     raise "No valid pdb provided: #{ pdb }"
   end
